@@ -75,3 +75,5 @@ def print_files(directory):
         print(directory+file)
         
     return None
+
+# print(get_image_3d(os.curdir+"/data/Apple/apple_0.jpg"))
