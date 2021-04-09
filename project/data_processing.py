@@ -23,7 +23,10 @@ class DataProcessor():
 def getImageOriginalShape(newShape, oldShape):
     return newShape[0], newShape[1] // oldShape[2], oldShape[2]
 
-
+def loadClassCsvFile(classPath):
+    data = np.genfromtxt(classPath,delimiter=",", dtype=int)
+    return data.reshape(getImageOriginalShape(data.shape, (data.shape[0], data.shape[-1], 3 )))
+    
 
 def createDataset(dataDirectoryPath):
     timeBeforeExecution = time.time()
