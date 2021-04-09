@@ -1,11 +1,16 @@
+from perceptron import Perceptron
+
 class Main():
     pass
     
+    # todo: for each weight create a perceptron with its corresponding classLabel
     def __init__(self):
         pass
-
+    
+    # trains a collection of perceptrons 
     def train(self, path):
         print(path)
+    
     
     def predict(self, path):
         print(path)

@@ -1,11 +1,13 @@
 from data_processing import DataProcessor
 
-class perceptron():
+class Perceptron():
 
-    def __init__(self, learningRate, weights, class):
+    def __init__(self, learningRate, weights, classLabelValue, classLabel):
         self.eta = learningRate
         self.w = weights
-        self.class = class
+        self.clv = classLabelValue
+        self.cl = classLabel
+        self.dp = DataProcessor()
 
     # todo: should receive the data and saves the weights in a csv file
     def train(self, epochs):
