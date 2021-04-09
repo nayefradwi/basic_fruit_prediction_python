@@ -1,40 +1,68 @@
-from matplotlib import pyplot as plt
+from datetime import date
+import matplotlib.pyplot as plt
+from numpy.lib.type_check import imag
 import utils
 import os
 import numpy as np
-import file_processing as fp
+from sklearn.decomposition import PCA
+
+# todo: remove time and pca before submitting 
 import time
 
 class DataProcessor():
     classesList = []
+    numberOfClasses = 0
+    def __init__(self, classLabelValue):
+        data = DataProcessor.classesList[classLabelValue]
 
-    def __init__(self, filePath):
-        data = np.genfromtxt(filePath, delimiter=',')
-        splitData = self.splitData(data)
-        self.training = splitData[0]
-        self.testing = splitData[1]
-
-    def splitData(self, data):
-        np.random.shuffle(data)
-        seventyPercent = int(np.floor(0.75*len(data[:])))
-        return [data[:seventyPercent], data[seventyPercent:]]
-      
-
-def getImageOriginalShape(newShape, oldShape):
-    return newShape[0], newShape[1] // oldShape[2], oldShape[2]
-
-def loadClassCsvFile(classPath):
-    data = np.genfromtxt(classPath,delimiter=",", dtype=int)
-    return data.reshape(getImageOriginalShape(data.shape, (data.shape[0], data.shape[-1], 3 )))
+    def addClass(classImages):
+        DataProcessor.classesList.append(np.array(classImages))
+        DataProcessor.numberOfClasses = DataProcessor.numberOfClasses+1
     
+    def dimensionReduction(image):
+        image = DataProcessor.convertImageToGrayScale(image)
+        DataProcessor.pcaFunction(image)
+        DataProcessor.pc(image)
+        return image
 
+    def pcaFunction(data):
+        data = DataProcessor.center(data)
+        cov = DataProcessor.getCovMatrix(data)
+        eigVector, eigValue = np.linalg.eig(cov)
+        idx = eigVector.argsort()[::-1] # Sort descending and get sorted indices
+        eigVector = eigVector[idx] # Use indices on eigv vector
+        eigValue = eigValue[:,idx] #
+        # print(eigVector[:5]) 
+        data = np.abs(data.dot(eigValue[:, :10]))
+        print(data.shape)
+
+    def pc(A):
+        # print(A[0][:10])
+        # A = DataProcessor.scaleData(A)
+        # print(A[0][:10])
+        pca = PCA(n_components=0.9)
+        pca.fit(A)
+        components = pca.transform(A)
+        projected = pca.inverse_transform(components)
+        print(components.shape)
+        # print(components[0])
+        # print(projected.shape)
+        # utils.show_image(projected)
+        # plt.show()
+        
+    def getCovMatrix(data):
+        return np.cov(data.T) / data.shape[0]
+        
+    def center(data):
+        return data - data.mean(axis=0)
+
+    def convertImageToGrayScale(image):
+        rgbWeights = [0.2989, 0.5870, 0.1140]
+        return np.dot(image, rgbWeights)
+
+      
 def createDataset(dataDirectoryPath):
-    timeBeforeExecution = time.time()
-
-    # create a dataset directory that will store .csv files
-    # fp.createDatasetDirectory()
-
-    # get list of directories in the dataset (classes)
+    # timeBeforeExecution = time.time()
     directories = os.listdir(dataDirectoryPath)
     
     # loop over the data directory 
@@ -46,46 +74,26 @@ def createDataset(dataDirectoryPath):
 
         if os.path.isdir(classDirectoryPath):
             imageFileNames = os.listdir(classDirectoryPath)
-            # imagesStack = np.empty((0,100, 3),dtype=int)
 
+            # list of images for a specific class
             images = []
+
             # loop over each image in a specific directory
-            for ii in range(0, len(imageFileNames)):
+            # len(imageFileNames)
+            for ii in range(0, 1):
                 imageFile = imageFileNames[ii]
                 imageFilePath = "{}/{}/{}".format(dataDirectoryPath,classDirectory,imageFile)
-
                 if os.path.isfile(imageFilePath):
-                    
                     image3dArray = utils.get_image_3d(imageFilePath)
+                    image3dArray = DataProcessor.dimensionReduction(image3dArray)
                     images.append(image3dArray)
-                    # imagesStack = np.vstack((i,image3dArray))
-            # fp.save3dFileAs2dCsv("dataset/{}".format(classDirectory.lower()), imagesStack)
-            DataProcessor.classesList.append(np.array(images))
-            
-    timeTaken = time.time()-timeBeforeExecution
-    print("time took for createDataset: ")
-    print(timeTaken)
 
-def loadClasses():
-    timeBeforeExecution = time.time()
-    stackedImagesArray = []
-    classes = os.listdir("{}/dataset".format(os.curdir))
-    for classCsvFile in classes:
-        print("file: {}".format(classCsvFile))
-        stackedImagesArray.append(loadClassCsvFile("{}/dataset/{}".format(os.curdir, classCsvFile)))
-    timeTaken = time.time()-timeBeforeExecution
-    print("time took for loadclasses: ")
-    print(timeTaken)
-    return stackedImagesArray
+            # add class images to be stored in static list
+            DataProcessor.addClass(images)
 
-# def calculateMacroRecall(actuals, predictions):
-#     pass
+    # timeTaken = time.time()-timeBeforeExecution
+    # print("time took for createDataset: ")
+    # print(timeTaken)
 
-# def calculateMacroPrecision(actuals, predictions):
-#     pass
-
-# def calculateMacroF1(actuals, predictions):
-#     pass
 
 createDataset("./data")
-# loadClasses()

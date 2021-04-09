@@ -78,22 +78,3 @@ def print_files(directory):
         
     return None
 
-# imageTest = get_image_3d(os.curdir+"/data/Apple/apple_0.jpg")
-# imageTest1 = get_image_3d(os.curdir+"/data/Apple/apple_1.jpg")
-# original = np.vstack((imageTest,imageTest1))
-# # original = imageTest
-# print("shape before save {}".format(original.shape))
-
-# images = original.reshape(original.shape[0], -1)
-# print("shape after flattening {}".format(images.shape))
-
-# np.savetxt("dataset.csv",images, delimiter=',')
-
-# images = np.genfromtxt("dataset.csv",delimiter=",", dtype=int)
-# print("shape after load {}".format(images.shape))
-# images = images.reshape(
-#     images.shape[0], images.shape[1] // original.shape[2], original.shape[2])
-# print("shape after reshape {}".format(images.shape))
-# print("data {}".format(images))
-# show_image(images)
-# plt.show()

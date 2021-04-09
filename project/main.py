@@ -19,6 +19,7 @@ class Main():
 main = Main()
 while(True):
     choice = input("choose:\n1) train on a new dataset\n2) predict\n3) quit\n")
+    
     if(choice == "3"):
         exit(1)
     elif(choice == "2"):
