@@ -18,6 +18,8 @@ class DataProcessor():
         DataProcessor.classesList.append(np.array(classImages))
         DataProcessor.numberOfClasses = DataProcessor.numberOfClasses+1
 
+    def featureExtraction(image3d):
+        pass
 
     def absolute_scale(feature):
         return feature/np.max(feature)
