@@ -10,11 +10,17 @@ class Perceptron():
 
     # todo: should receive the data and saves the weights in a csv file
     def train(self, epochs):
-        
         pass
     
     # todo: should predict 0 or 1 if the example suits the class or not along with the sureness (?)
+    # receives examples in 1d array 
     def predict(self, example):
         if(self.w is None):
             return "perceptron not trained"
+    
+    def trainMultiple(dataset):
+        pass
+
+    def test(self):
+        pass
     

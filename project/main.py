@@ -9,12 +9,16 @@ class Main():
     
     # trains a collection of perceptrons 
     def train(self, path):
+        # create data set
+        # 
         print(path)
     
     
-    def predict(self, path):
+    def predictOne(self, path):
         print(path)
 
+    def predictMultiple(self, path):
+        print(path)
 
 main = Main()
 while(True):
@@ -23,9 +27,10 @@ while(True):
     if(choice == "3"):
         exit(1)
     elif(choice == "2"):
-        main.predict("predicted apple")
+        main.predictOne("predicted apple")
     elif(choice == "1"):
-        main.predict("trained on new dataset")
+        path = input("put the path of the data set folder:\n")
+        main.train("path")
     else:
         print("unknown command")
         
