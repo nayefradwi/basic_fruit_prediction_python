@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-from numpy.core.fromnumeric import shape
 import utils
 import os
 import numpy as np
@@ -7,12 +6,32 @@ import numpy as np
 
 class DataProcessor():
     numberOfClasses = 0
+    classLabelsList =[]
+    globalTrainingSet = []
+    globalTestingSet = []
+    featureLength = 0
 
     def __init__(self, classLabelValue):
-        self.dataset = []
-        self.training = []
-        self.validation = []
-        self.testing = []
+        data = DataProcessor.getTrainingSetForClass(classLabelValue)
+        print(data.shape)
+        self.training = data[0]
+        print(data[0].shape)
+        self.validation = data[1]
+        print(data[1].shape)
+
+
+    def getTrainingSetForClass(classLabelValue):
+        # get only classlabel==classLabelValue from data
+        # get classlabel!=classLabelValue from data
+        # then you can do what ever with them, oversample undersample whatever 
+        pass
+
+    def initializeDataProcessorClass():
+        DataProcessor.classLabelsList = open("classLabels.csv", "r").read().split('\n')[:-1]
+        DataProcessor.numberOfClasses = len(DataProcessor.classLabelsList)
+        DataProcessor.globalTrainingSet = np.genfromtxt('training.csv', delimiter=',')
+        DataProcessor.globalTestingSet = np.genfromtxt('testing.csv', delimiter=',')
+        DataProcessor.featureLength = DataProcessor.globalTrainingSet.shape[-1]
 
     def splitData(data):
         np.random.shuffle(data)
@@ -32,7 +51,6 @@ class DataProcessor():
 
         # flatten the features
         flattened = averageMatrixRgb.reshape((averageMatrixRgb.shape[0]*averageMatrixRgb.shape[1]*averageMatrixRgb.shape[2]))    
-
         return flattened
 
     # returns a 5x5 matrix for a channel 
@@ -45,27 +63,24 @@ class DataProcessor():
         return averageChannelMatrix
 
     def averageValue(matrix):
-        try:
-            return np.average(matrix)
-        except:
-            print("error")
+        return np.average(matrix)
       
     def createDataset(dataDirectoryPath):
         directories = os.listdir(dataDirectoryPath)
-        np.savetxt("classesLength.csv", [len(directories)])
-    
+        
+        classes = []
         imagesFeatures = []
-        # len(directories)
         for i in range(0, len(directories)):
             classDirectory = directories[i]
-
+            
             print("directory: {}".format(classDirectory))
+            classes.append(classDirectory)
+            
             classDirectoryPath = "{}/{}".format(dataDirectoryPath,classDirectory)
 
             if os.path.isdir(classDirectoryPath):
                 imageFileNames = os.listdir(classDirectoryPath)
 
-                # len(imageFileNames)
                 for ii in range(0, len(imageFileNames)):
                     imageFile = imageFileNames[ii]
                     imageFilePath = "{}/{}/{}".format(dataDirectoryPath,classDirectory,imageFile)
@@ -80,5 +95,7 @@ class DataProcessor():
         [training, testing] = DataProcessor.splitData(imagesFeatures)
         np.savetxt("training.csv", training, delimiter=",")
         np.savetxt("testing.csv", testing, delimiter=",")
+        np.savetxt("classLabels.csv", np.array(classes), delimiter=',',fmt="%s")
         return imagesFeatures
 
+# DataProcessor.createDataset("./data")
