@@ -112,4 +112,4 @@ class DataProcessor():
         np.savetxt("classLabels.csv", np.array(classes), delimiter=',',fmt="%s")
         return imagesFeatures
 
-DataProcessor.createDataset("./data")
+# DataProcessor.createDataset("./data")

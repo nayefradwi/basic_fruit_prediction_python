@@ -8,7 +8,7 @@ class Perceptron():
         self.clv = classLabelValue
         self.dp = DataProcessor(classLabelValue)
         if weights is None:
-            self.generateRandomWeights(0.02, 0.1)
+            self.generateRandomWeights(0.005, 0.01)
 
     def generateRandomWeights(self, min, max):
         self.w = (np.random.uniform(min, max, size=(DataProcessor.featureLength)))
@@ -25,7 +25,6 @@ class Perceptron():
             # len(self.dp.training)
             for ii in range(0, len(self.dp.training)):
                 trainingExample = self.dp.training[ii]
-                print("training example number: {}".format(ii))
                
                 # call the predict
                 [predicition, confidence] = self.predict(example=trainingExample[:-1])
@@ -43,14 +42,11 @@ class Perceptron():
         return np.array(accuracies)
 
     def updateWeights(self, realOutput, perceptronOutput, featuresCopy):
-        print("weights updated")
         featuresCopy = np.insert(featuresCopy, 0, 1, axis=0)
         self.w = self.w + self.eta*(realOutput-perceptronOutput)*featuresCopy
     
     # receives examples in 1d array 
     def predict(self, example):
-        print(self.w.shape)
-        print(example.shape)
         if(self.w is None):
             return "perceptron not trained"
         confidence = np.dot(self.w[1:], example)
