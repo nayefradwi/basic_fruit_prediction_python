@@ -21,6 +21,7 @@ class Perceptron():
         featuresCopy = np.insert(featuresCopy, 0, 1, axis=0)
         self.w = self.w + self.eta*(realOutput-perceptronOutput)*featuresCopy
     
+    
     # receives examples in 1d array 
     def predict(self, example):
         if(self.w is None):
