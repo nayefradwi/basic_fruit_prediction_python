@@ -57,7 +57,8 @@ class DataProcessor():
         averageMatrixRgb = averageMatrixRgb.T
 
         # flatten the features
-        flattened = averageMatrixRgb.reshape((averageMatrixRgb.shape[0]*averageMatrixRgb.shape[1]*averageMatrixRgb.shape[2]))    
+        flattened = averageMatrixRgb.reshape((averageMatrixRgb.shape[0]*averageMatrixRgb.shape[1]*averageMatrixRgb.shape[2]))
+        flattened = DataProcessor.absolute_scale(flattened);    
         return flattened
 
     # returns a 5x5 matrix for a channel 
@@ -71,7 +72,13 @@ class DataProcessor():
 
     def averageValue(matrix):
         return np.average(matrix)
-      
+
+    def getAccuracy(inputs, labels):
+        pass
+
+    def absolute_scale(features):
+        return features/np.max(features)
+
     def createDataset(dataDirectoryPath):
         directories = os.listdir(dataDirectoryPath)
         
@@ -105,4 +112,4 @@ class DataProcessor():
         np.savetxt("classLabels.csv", np.array(classes), delimiter=',',fmt="%s")
         return imagesFeatures
 
-# DataProcessor.createDataset("./data")
+DataProcessor.createDataset("./data")
