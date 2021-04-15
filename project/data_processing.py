@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from numpy.core.fromnumeric import shape
 import utils
 import os
 import numpy as np
@@ -13,18 +14,24 @@ class DataProcessor():
 
     def __init__(self, classLabelValue):
         data = DataProcessor.getTrainingSetForClass(classLabelValue)
-        print(data.shape)
         self.training = data[0]
-        print(data[0].shape)
         self.validation = data[1]
-        print(data[1].shape)
 
 
     def getTrainingSetForClass(classLabelValue):
         # get only classlabel==classLabelValue from data
+        classData = DataProcessor.globalTrainingSet[np.where(DataProcessor.globalTrainingSet[:, -1] == classLabelValue)]
+
         # get classlabel!=classLabelValue from data
-        # then you can do what ever with them, oversample undersample whatever 
-        pass
+        nonClassData = DataProcessor.globalTrainingSet[np.where(DataProcessor.globalTrainingSet[:, -1] != classLabelValue)]
+        
+        # undersampling
+        nonClassData = nonClassData[:len(classData)]
+        
+        # returning training and validation set
+        dataSetForOneClass = np.append(classData, nonClassData, axis=0)
+        return DataProcessor.splitData(np.copy(dataSetForOneClass))
+        
 
     def initializeDataProcessorClass():
         DataProcessor.classLabelsList = open("classLabels.csv", "r").read().split('\n')[:-1]
