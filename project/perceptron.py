@@ -247,8 +247,13 @@ class Perceptron():
         # get where prediction == 1 (indexes)
         # sort the answer based on highest confidence
         onesIndex = np.argmax(perceptronPredictions[:,-1], axis=0)
+        label = "unable to find label due to not loading classlabel.csv"
+        try:
+            label = Perceptron.perceptrons[onesIndex].getLabelNameFromLabelValue()
+        except:
+            pass
         # then you can return both label name and index (predicition)
-        return [onesIndex, Perceptron.perceptrons[onesIndex].getLabelNameFromLabelValue()]
+        return [onesIndex, label]
 
         
 
