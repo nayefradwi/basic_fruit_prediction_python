@@ -127,20 +127,20 @@ class Perceptron():
             predicitions = []
             
             # loop over the training set
-            for trainingExample in self.dp.training:
+            for trainingExample in DataProcessor.globalTrainingSet:
                 realLabel = self.getZeroOrOneLabel(trainingExample[-1])
                 [predicition, confidence] = self.predict(example=trainingExample[:-1])
                 predicitions.append(predicition)
                 self.updateWeights(realLabel, predicition, np.copy(trainingExample[:-1]))
 
             predicitions = np.array(predicitions)
-            trainingLabels = np.copy(self.dp.training[:, -1])
+            trainingLabels = np.copy(DataProcessor.globalTrainingSet[:,-1])
             trainingLabels = np.vectorize(self.getZeroOrOneLabel)(trainingLabels)
             accuracy = DataProcessor.getAccuracy(np.array(predicitions),trainingLabels)
             accuracies.append(accuracy)
             if runValidation:
                 validationAccuracies.append(self.validation())
-
+            np.random.shuffle(DataProcessor.globalTrainingSet)
         if addGraph:
             plt.figure(1)
             plt.plot(accuracies, label=self.getLabelNameFromLabelValue())
@@ -290,7 +290,7 @@ class Perceptron():
 
 
         
-Perceptron.trainModel(epochs=40,learningRate=0.01, runValidation=False)
+Perceptron.trainModel(epochs=1000,learningRate=0.01, runValidation=False)
 Perceptron.testModel()
 status = Perceptron.initialize()
 if status != 0:

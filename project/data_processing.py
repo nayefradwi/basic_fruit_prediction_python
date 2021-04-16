@@ -120,6 +120,8 @@ class DataProcessor():
             flattened = np.append(flattened, averageMatrixOFChannel)
             varianceOfChannel = DataProcessor.getVarianceOfChannel(image3d[:,:, rgbChannelIndex], stepSize=10)
             flattened = np.append(flattened, varianceOfChannel)
+            varianceOfChannel = DataProcessor.getStdOfChannel(image3d[:,:, rgbChannelIndex], stepSize=10)
+            flattened = np.append(flattened, varianceOfChannel)
             maxOfChannel = DataProcessor.getMaxOfChannel(image3d[:,:, rgbChannelIndex], stepSize=10)
             flattened = np.append(flattened, maxOfChannel)
             minOfChannel = DataProcessor.getMinOfChannel(image3d[:,:, rgbChannelIndex], stepSize=10)
@@ -149,7 +151,16 @@ class DataProcessor():
                 average = DataProcessor.getVariance(matrix[i:(i+1)*stepSize, ii:(ii+1)*stepSize])
                 varianceChannelMatrix[i, ii] = average.astype(int)
         return varianceChannelMatrix.reshape(varianceChannelMatrix.shape[0]*varianceChannelMatrix.shape[1])  
-
+    '''
+    filters the matrix based on step size and returns the std
+    ''' 
+    def getStdOfChannel(matrix, stepSize):
+        varianceChannelMatrix = np.empty((int(matrix.shape[0]/stepSize), int(matrix.shape[1]/stepSize)))
+        for i in range(0, varianceChannelMatrix.shape[0]):
+            for ii in range(0, varianceChannelMatrix.shape[1]):
+                average = DataProcessor.getVariance(matrix[i:(i+1)*stepSize, ii:(ii+1)*stepSize])
+                varianceChannelMatrix[i, ii] = average.astype(int)
+        return varianceChannelMatrix.reshape(varianceChannelMatrix.shape[0]*varianceChannelMatrix.shape[1])  
     '''
     filters the matrix based on step size and returns min
     ''' 
@@ -181,10 +192,13 @@ class DataProcessor():
 
     '''
     def getAverage(matrix):
-        return np.average(matrix)
+        return np.mean(matrix)
     
     def getVariance(matrix):
         return np.var(matrix)
+
+    def getVariance(matrix):
+        return np.std(matrix)
     
     def getMax(matrix):
         return np.max(matrix)
