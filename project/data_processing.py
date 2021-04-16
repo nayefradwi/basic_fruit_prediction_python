@@ -60,7 +60,7 @@ class DataProcessor():
         
         # returning training and validation set
         dataSetForOneClass = np.append(classData, nonClassData, axis=0)
-        return DataProcessor.splitData(np.copy(dataSetForOneClass),fraction=0.90)
+        return DataProcessor.splitData(np.copy(dataSetForOneClass),fraction=1)
         
 
     '''
@@ -112,44 +112,85 @@ class DataProcessor():
     flattened - the features flattened to be an 1d array
     '''
     def featureExtraction(image3d):
-        averageMatrixRgb = []
+        flattened = np.array([])
 
         # loop every channel
         for rgbChannelIndex in range(0,image3d.shape[-1]):
-            averageMatrixOFChannel = DataProcessor.getAverageChannelMatrix(image3d[:,:, rgbChannelIndex], stepSize=5)
-            averageMatrixRgb.append(averageMatrixOFChannel)
-
+            averageMatrixOFChannel = DataProcessor.getAverageChannelMatrix(image3d[:,:, rgbChannelIndex], stepSize=10)
+            flattened = np.append(flattened, averageMatrixOFChannel)
+            varianceOfChannel = DataProcessor.getVarianceOfChannel(image3d[:,:, rgbChannelIndex], stepSize=10)
+            flattened = np.append(flattened, varianceOfChannel)
+            maxOfChannel = DataProcessor.getMaxOfChannel(image3d[:,:, rgbChannelIndex], stepSize=10)
+            flattened = np.append(flattened, maxOfChannel)
+            minOfChannel = DataProcessor.getMinOfChannel(image3d[:,:, rgbChannelIndex], stepSize=10)
+            flattened = np.append(flattened, minOfChannel)
         
-        averageMatrixRgb = np.array(averageMatrixRgb, dtype=int)
-        averageMatrixRgb = averageMatrixRgb.T
-
-        # flatten the features
-        flattened = averageMatrixRgb.reshape((averageMatrixRgb.shape[0]*averageMatrixRgb.shape[1]*averageMatrixRgb.shape[2]))
-        flattened = DataProcessor.absolute_scale(flattened);    
+        flattened = DataProcessor.absolute_scale(flattened);
         return flattened
 
     '''
-    filters the matrix based on step size and returns the 
+    filters the matrix based on step size and returns the average
     ''' 
     def getAverageChannelMatrix(matrix, stepSize):
         averageChannelMatrix = np.empty((int(matrix.shape[0]/stepSize), int(matrix.shape[1]/stepSize)))
         for i in range(0, averageChannelMatrix.shape[0]):
             for ii in range(0, averageChannelMatrix.shape[1]):
-                average = DataProcessor.averageValue(matrix[i:(i+1)*stepSize, ii:(ii+1)*stepSize])
+                average = DataProcessor.getAverage(matrix[i:(i+1)*stepSize, ii:(ii+1)*stepSize])
                 averageChannelMatrix[i, ii] = average.astype(int)
-        return averageChannelMatrix
+        return averageChannelMatrix.reshape(averageChannelMatrix.shape[0]*averageChannelMatrix.shape[1])
 
     '''
-    gets the average of a matrix
+    filters the matrix based on step size and returns the variance
+    ''' 
+    def getVarianceOfChannel(matrix, stepSize):
+        varianceChannelMatrix = np.empty((int(matrix.shape[0]/stepSize), int(matrix.shape[1]/stepSize)))
+        for i in range(0, varianceChannelMatrix.shape[0]):
+            for ii in range(0, varianceChannelMatrix.shape[1]):
+                average = DataProcessor.getVariance(matrix[i:(i+1)*stepSize, ii:(ii+1)*stepSize])
+                varianceChannelMatrix[i, ii] = average.astype(int)
+        return varianceChannelMatrix.reshape(varianceChannelMatrix.shape[0]*varianceChannelMatrix.shape[1])  
+
+    '''
+    filters the matrix based on step size and returns min
+    ''' 
+    def getMinOfChannel(matrix, stepSize):
+        minChannelMatrix = np.empty((int(matrix.shape[0]/stepSize), int(matrix.shape[1]/stepSize)))
+        for i in range(0, minChannelMatrix.shape[0]):
+            for ii in range(0, minChannelMatrix.shape[1]):
+                average = DataProcessor.getMin(matrix[i:(i+1)*stepSize, ii:(ii+1)*stepSize])
+                minChannelMatrix[i, ii] = average.astype(int)
+        return minChannelMatrix.reshape(minChannelMatrix.shape[0]*minChannelMatrix.shape[1]) 
+    
+    '''
+    filters the matrix based on step size and returns max 
+    ''' 
+    def getMaxOfChannel(matrix, stepSize):
+        maxChannelMatrix = np.empty((int(matrix.shape[0]/stepSize), int(matrix.shape[1]/stepSize)))
+        for i in range(0, maxChannelMatrix.shape[0]):
+            for ii in range(0, maxChannelMatrix.shape[1]):
+                average = DataProcessor.getMax(matrix[i:(i+1)*stepSize, ii:(ii+1)*stepSize])
+                maxChannelMatrix[i, ii] = average.astype(int)
+        return maxChannelMatrix.reshape(maxChannelMatrix.shape[0]*maxChannelMatrix.shape[1])
+
+    '''
+    perform mathematical operations on
+    a matrix
 
     params:
     matrix - numpy array
 
-    return
-    average - the average of the matrix
     '''
-    def averageValue(matrix):
+    def getAverage(matrix):
         return np.average(matrix)
+    
+    def getVariance(matrix):
+        return np.var(matrix)
+    
+    def getMax(matrix):
+        return np.max(matrix)
+
+    def getMin(matrix):
+        return np.min(matrix)
 
     '''
     gets the accuracy 
@@ -164,6 +205,18 @@ class DataProcessor():
     def getAccuracy(predictions, realOutput):
         return len(predictions[np.where(predictions==realOutput)])/len(realOutput)
 
+
+    def getPrecision(tp, fp):
+        try:
+            return tp/(tp+fp)
+        except:
+            return 0
+    
+    def getRecall(tp, fn):
+        try:
+            return tp/(tp+fn)
+        except:
+            return 0
     '''
     params:
     features - 1d array of features without the label

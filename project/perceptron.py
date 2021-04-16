@@ -128,7 +128,6 @@ class Perceptron():
             
             # loop over the training set
             for trainingExample in self.dp.training:
-
                 realLabel = self.getZeroOrOneLabel(trainingExample[-1])
                 [predicition, confidence] = self.predict(example=trainingExample[:-1])
                 predicitions.append(predicition)
@@ -256,9 +255,43 @@ class Perceptron():
             pass
         # then you can return both label name and index (predicition)
         return [onesIndex, label]
+    
+    def testModel():
+        precisions = []
+        recalls = []
+        for i in range(0, len(Perceptron.perceptrons)):
+            tp = 0
+            fp = 0
+            tn = 0
+            fn = 0
+            print("testing class: {}".format(i))
+            # testingSetFiltered = DataProcessor.globalTestingSet[np.where(DataProcessor.globalTestingSet[:, -1]==i)]
+            for testExample in DataProcessor.globalTestingSet:
+                [label, labelName] =Perceptron.predictModel(testExample[:-1])
+                if label == i and testExample[-1] == i:
+                    tp = tp + 1
+                    continue
+                elif label != i and testExample[-1] == i:
+                    fn = fn + 1
+                    continue
+                elif label != i and testExample[-1] != i:
+                    tn = tn +1
+                    continue
+                elif label == i and testExample[-1] != i:
+                    fp = fp + 1
+                    continue
+            # get recall
+            recalls.append(DataProcessor.getRecall(tp, fn))
+            # get percision
+            precisions.append(DataProcessor.getPrecision(tp, fp))
+        precision = np.average(precisions)
+        recall = np.average(recalls)
+        print("percision of class: {}; recall: {}".format(precision,recall))
+
 
         
-Perceptron.trainModel(epochs=20,learningRate=0.01, runValidation=True)
+Perceptron.trainModel(epochs=40,learningRate=0.01, runValidation=False)
+Perceptron.testModel()
 status = Perceptron.initialize()
 if status != 0:
     print("not trained before")
