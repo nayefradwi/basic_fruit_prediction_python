@@ -22,15 +22,18 @@ class Main():
 
 main = Main()
 while(True):
-    choice = input("choose:\n1) train on a new dataset\n2) predict\n3) quit\n")
-    
-    if(choice == "3"):
+    choice = input("choose:\n0) run main app\n1) create new dataset\n2) train again on the latest created dataset\n3) test and analyze using testset created in (1)\n4) quit\n")
+    if choice == 0:
+        print("main app")
+    elif choice == "4":
         exit(1)
-    elif(choice == "2"):
+    elif choice == "3":
         main.predictOne("predicted apple")
-    elif(choice == "1"):
+    elif choice == "2":
         path = input("put the path of the data set folder:\n")
         main.train("path")
+    elif choice == "1":
+        print("created new dataset")
     else:
         print("unknown command")
         

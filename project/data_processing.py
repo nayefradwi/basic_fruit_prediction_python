@@ -33,11 +33,14 @@ class DataProcessor():
         
 
     def initializeDataProcessorClass():
-        DataProcessor.classLabelsList = open("classLabels.csv", "r").read().split('\n')[:-1]
-        DataProcessor.numberOfClasses = len(DataProcessor.classLabelsList)
-        DataProcessor.globalTrainingSet = np.genfromtxt('training.csv', delimiter=',')
-        DataProcessor.globalTestingSet = np.genfromtxt('testing.csv', delimiter=',')
-        DataProcessor.featureLength = DataProcessor.globalTrainingSet.shape[-1]
+        try:
+            DataProcessor.classLabelsList = open("classLabels.csv", "r").read().split('\n')[:-1]
+            DataProcessor.numberOfClasses = len(DataProcessor.classLabelsList)
+            DataProcessor.globalTrainingSet = np.genfromtxt('training.csv', delimiter=',')
+            DataProcessor.globalTestingSet = np.genfromtxt('testing.csv', delimiter=',')
+            DataProcessor.featureLength = DataProcessor.globalTrainingSet.shape[-1]
+        except:
+            print("dataset has not been created please, create a dataset before running training")
 
     def splitData(data):
         np.random.shuffle(data)
@@ -111,4 +114,3 @@ class DataProcessor():
         np.savetxt("classLabels.csv", np.array(classes), delimiter=',',fmt="%s")
         return imagesFeatures
 
-# DataProcessor.createDataset("./data")
