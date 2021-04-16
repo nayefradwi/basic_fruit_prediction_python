@@ -1,5 +1,6 @@
 /data/
 project.zip
 /dataset/
-/dataset.csv
 /foo.csv
+training.csv
+testing.csv
