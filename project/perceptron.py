@@ -32,7 +32,7 @@ class Perceptron():
         DataProcessor.initializeDataProcessorClass()
         try:
             classesWeights = np.genfromtxt("weights.csv",  delimiter=',')
-            for i in range(0, DataProcessor.numberOfClasses):
+            for i in range(0, len(classesWeights)):
                 Perceptron.perceptrons.append(Perceptron(None, classLabelValue=i, weights=classesWeights[i]))
         except Exception as e:
             print(e.with_traceback())
@@ -252,15 +252,15 @@ class Perceptron():
 
         
 
-# status = Perceptron.initialize()
-# if status != 0:
-#     print("not trained before")
-#     exit(0)
-# while True:
-#     filename = askopenfilename(filetypes=[("images", "*.jpg")])
-#     image3d = get_image_3d(filename)
-#     imageFeature = DataProcessor.featureExtraction(image3d)
-#     predicition = Perceptron.predictModel(example=imageFeature)
-#     print(predicition)
+status = Perceptron.initialize()
+if status != 0:
+    print("not trained before")
+    exit(0)
+while True:
+    filename = askopenfilename(filetypes=[("images", "*.jpg")])
+    image3d = get_image_3d(filename)
+    imageFeature = DataProcessor.featureExtraction(image3d)
+    predicition = Perceptron.predictModel(example=imageFeature)
+    print(predicition)
 
 
