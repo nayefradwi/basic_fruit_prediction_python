@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-from numpy.core.fromnumeric import shape
 import utils
 import os
 import numpy as np
@@ -73,8 +72,8 @@ class DataProcessor():
     def averageValue(matrix):
         return np.average(matrix)
 
-    def getAccuracy(inputs, labels):
-        pass
+    def getAccuracy(predictions, realOutput):
+        return len(predictions[np.where(predictions==realOutput)])/len(realOutput)
 
     def absolute_scale(features):
         return features/np.max(features)
