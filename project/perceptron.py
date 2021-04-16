@@ -14,7 +14,7 @@ class Perceptron():
 
     # list of perceptron objects
     perceptrons = []
-
+    isDpInitialized = False
     '''
     Initialize will initialize the model by creating preceptrons 
     equal to the number of classes defined in the classLabels.csv,
@@ -191,6 +191,8 @@ class Perceptron():
     this makes the model deployable 
     '''
     def trainModel(epochs, learningRate,runValidation = False):
+        if not Perceptron.isDpInitialized:
+            DataProcessor.initializeDataProcessorClass()
         # define a 2d np array of weights that will then be stored in a csv file
         weights = []
 
@@ -256,7 +258,7 @@ class Perceptron():
         return [onesIndex, label]
 
         
-
+Perceptron.trainModel(epochs=20,learningRate=0.01, runValidation=True)
 status = Perceptron.initialize()
 if status != 0:
     print("not trained before")

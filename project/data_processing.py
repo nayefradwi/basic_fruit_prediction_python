@@ -60,7 +60,7 @@ class DataProcessor():
         
         # returning training and validation set
         dataSetForOneClass = np.append(classData, nonClassData, axis=0)
-        return DataProcessor.splitData(np.copy(dataSetForOneClass))
+        return DataProcessor.splitData(np.copy(dataSetForOneClass),fraction=0.90)
         
 
     '''
@@ -116,8 +116,9 @@ class DataProcessor():
 
         # loop every channel
         for rgbChannelIndex in range(0,image3d.shape[-1]):
-            averageMatrixOFChannel = DataProcessor.getChannelMatrix(image3d[:,:, rgbChannelIndex], stepSize=10)
+            averageMatrixOFChannel = DataProcessor.getAverageChannelMatrix(image3d[:,:, rgbChannelIndex], stepSize=5)
             averageMatrixRgb.append(averageMatrixOFChannel)
+
         
         averageMatrixRgb = np.array(averageMatrixRgb, dtype=int)
         averageMatrixRgb = averageMatrixRgb.T
@@ -130,7 +131,7 @@ class DataProcessor():
     '''
     filters the matrix based on step size and returns the 
     ''' 
-    def getChannelMatrix(matrix, stepSize):
+    def getAverageChannelMatrix(matrix, stepSize):
         averageChannelMatrix = np.empty((int(matrix.shape[0]/stepSize), int(matrix.shape[1]/stepSize)))
         for i in range(0, averageChannelMatrix.shape[0]):
             for ii in range(0, averageChannelMatrix.shape[1]):
