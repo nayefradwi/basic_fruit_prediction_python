@@ -265,7 +265,6 @@ class Perceptron():
             tn = 0
             fn = 0
             print("testing class: {}".format(i))
-            # testingSetFiltered = DataProcessor.globalTestingSet[np.where(DataProcessor.globalTestingSet[:, -1]==i)]
             for testExample in DataProcessor.globalTestingSet:
                 [label, labelName] =Perceptron.predictModel(testExample[:-1])
                 if label == i and testExample[-1] == i:
@@ -290,8 +289,8 @@ class Perceptron():
 
 
         
-# Perceptron.trainModel(epochs=1000,learningRate=0.01, runValidation=False)
-# Perceptron.testModel()
+Perceptron.trainModel(epochs=100,learningRate=0.01, runValidation=False)
+Perceptron.testModel()
 status = Perceptron.initialize()
 if status != 0:
     print("not trained before")

@@ -78,8 +78,10 @@ class DataProcessor():
         except:
             print("there are no classes that can be used in the model")
         try:
-            DataProcessor.globalTrainingSet = np.genfromtxt('training.csv', delimiter=',')
-            DataProcessor.globalTestingSet = np.genfromtxt('testing.csv', delimiter=',')
+            data = np.genfromtxt('dataset.csv', delimiter=',')
+            [training, testing] = DataProcessor.splitData(data)
+            DataProcessor.globalTrainingSet = training
+            DataProcessor.globalTestingSet = testing
             DataProcessor.featureLength = DataProcessor.globalTrainingSet.shape[-1]
         except:
             print("dataset has not been created please, create a dataset before running training")
@@ -131,7 +133,13 @@ class DataProcessor():
         return flattened
 
     '''
-    filters the matrix based on step size and returns the average
+    filters the matrix based on step size and returns the what ever matrix is returned by the calculation function
+
+    params:
+    matrix - the matrix to be filtered
+    stepSize - the area of the original image that is taken into considration (int)
+    for example 5 step size will give you a 100/5 x 100/5 splitted image areas
+    calculationFunction - the function that will extract the features from the image area
     ''' 
     def getChannelMatrixCalculation(matrix, stepSize, calculationFunction):
         averageChannelMatrix = np.empty((int(matrix.shape[0]/stepSize), int(matrix.shape[1]/stepSize)))
@@ -209,9 +217,7 @@ class DataProcessor():
     will loop over each file in a sub directory, extract its features then adds the label to the end of the features array. 
     the features 1d array is then appended to imagesFeatures so that all the images can then be converted to a csv file.
 
-    after the loop the imagesFeatures array is split and 2 csv files are created
-    1) training.csv
-    2) testing.csv
+    after the loop the imagesFeatures array is saved in a dataset.csv
 
     this should be called only once, and that is to create the dataset for training.
     this is not necessary if the model has already been trained and a weights.csv & classLabels.csv files already
@@ -248,9 +254,7 @@ class DataProcessor():
                         imagesFeatures.append(features)
 
         imagesFeatures = np.array(imagesFeatures)
-        [training, testing] = DataProcessor.splitData(imagesFeatures)
-        np.savetxt("training.csv", training, delimiter=",")
-        np.savetxt("testing.csv", testing, delimiter=",")
+        np.savetxt("dataset.csv", imagesFeatures, delimiter=",")
         np.savetxt("classLabels.csv", np.array(classes), delimiter=',',fmt="%s")
         return imagesFeatures
 
