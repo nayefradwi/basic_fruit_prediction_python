@@ -299,4 +299,3 @@ class Perceptron():
         print("\npercision of class: {}; recall: {}; F1: {}; accuracy: {}".format(precision,recall, f1, accuracy))
 
 
-
