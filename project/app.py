@@ -14,15 +14,16 @@ root = tk.Tk()
 image = utils.get_image_3d("./data/Apple/apple_0.jpg")
 figure = utils.show_image(image)
 isInitialized = False
+isDpInitialized = False
 
 # window related 
-# print(labelText.get())
 root.geometry("800x800")
 root.resizable(False, False)
 
 # state variables
 labelText = tk.StringVar(value="apple")
 epochsVar = tk.StringVar(value="Epochs")
+learningRateVar = tk.StringVar(value="learning rate")
 
 def redirector(inputStr):
     global textbox
@@ -35,6 +36,9 @@ def redirector(inputStr):
 def on_closing():
     root.quit()
 
+def onProgressIsDone(thread):
+    thread.join()
+    print("DONE")
 
 def create_dataset():
     filename = askdirectory()
@@ -42,13 +46,45 @@ def create_dataset():
         thread = Thread(target = DataProcessor.createDataset, args=[filename])
         thread.start()
         print("creating dataset...")
+        thread1 = Thread(target=onProgressIsDone)
+        thread1.start()
      
-
+def updateImage():
+    global chart_type
+    chart_type.draw_idle()
+ 
 def train_dataset():
-    print(epochsVar.get())
+    global epochsVar, learningRateVar,isDpInitialized
+    if not isDpInitialized:
+        status = DataProcessor.initializeDataProcessorClass()
+        if status == 0:
+            print("data processor initialized")
+            isDpInitialized = True
+        else:
+            print("could not locate dataset file")
+            return
+    try:
+        epoch = int(epochsVar.get())
+        learningRateVar = float(learningRateVar.get())
+        thread = Thread(target =  Perceptron.trainModel, args=[epoch, learningRateVar])
+        thread.start()
+        print("started training...")
+    except:
+        print("please use numbers for epochs(int) and learning rate(float)")
 
 def test_dataset():
-    pass
+    global isDpInitialized
+    if not isDpInitialized:
+        status = DataProcessor.initializeDataProcessorClass()
+        if status == 0:
+            print("data processor initialized")
+            isDpInitialized = True
+        else:
+            print("could not locate dataset file")
+            return
+    thread = Thread(target =  Perceptron.testModel)
+    thread.start()
+    print("running tests...")
 
 def selectImage():
     global isInitialized, labelText, chart_type, figure
@@ -67,7 +103,7 @@ def selectImage():
         predicition = Perceptron.predictModel(example=imageFeature)
         labelText.set(predicition[-1])
         figure = utils.show_image(image3d)
-        chart_type.draw_idle()
+        updateImage()
 
 
 # buttons
@@ -79,6 +115,8 @@ createDataSetBtn = tk.Button(buttonListFrame,text="create Data set", command=cre
 createDataSetBtn.pack(side=tk.TOP,  fill="both")
 epochEntry = tk.Entry(buttonListFrame, textvariable=epochsVar)
 epochEntry.pack(side=tk.TOP,  fill="both")
+learningRateEntry = tk.Entry(buttonListFrame, textvariable=learningRateVar)
+learningRateEntry.pack(side=tk.TOP,  fill="both")
 runTrainingBtn = tk.Button(buttonListFrame,text="run training set", command=train_dataset)
 runTrainingBtn.pack(side=tk.TOP,  fill="both")
 runTestSetBtn = tk.Button(buttonListFrame,text="run test set", command=test_dataset)

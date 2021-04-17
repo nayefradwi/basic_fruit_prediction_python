@@ -210,8 +210,9 @@ class Perceptron():
         # store weights in a csv file 
         weights = np.array(weights)
         np.savetxt("weights.csv", weights, delimiter=",")
+        print("training done!")
         # display a plot that shows accuracy vs epoch for multiple perceptrons
-        plt.show()
+        return plt.gcf()
 
   
     '''

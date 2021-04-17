@@ -83,8 +83,10 @@ class DataProcessor():
             DataProcessor.globalTrainingSet = training
             DataProcessor.globalTestingSet = testing
             DataProcessor.featureLength = DataProcessor.globalTrainingSet.shape[-1]
+            return 0
         except:
             print("dataset has not been created please, create a dataset before running training")
+            return -1
 
     '''
     splits the data up into 2 different arrays
