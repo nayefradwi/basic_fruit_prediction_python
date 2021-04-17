@@ -119,11 +119,10 @@ class Perceptron():
     accuracies - a list of accuracies with size "epochs"
     '''
     def train(self, epochs, addGraph=False, runValidation=False):
-        print("started training!")
         validationAccuracies = []
         accuracies = []
         for i in range(0, epochs):
-            print("epoch: {}".format(i))
+            print("\repoch: {}/{}".format(i,epochs-1), end='')
             predicitions = []
             
             # loop over the training set
@@ -198,7 +197,7 @@ class Perceptron():
         for i in range(0, DataProcessor.numberOfClasses):
             # create a perceptron with clv = i
             p = Perceptron(learningRate,classLabelValue=i)
-            print("training {} perceptron".format(p.getLabelNameFromLabelValue()))
+            print("\ntraining {} perceptron".format(p.getLabelNameFromLabelValue()),)
             # train perceptron
             p.train(epochs, addGraph=True, runValidation=runValidation)
             # append weights
@@ -264,7 +263,7 @@ class Perceptron():
             fp = 0
             tn = 0
             fn = 0
-            print("testing class: {}".format(i))
+            print("\rtesting class: {}/{}".format(i,len(Perceptron.perceptrons)-1),end='')
             for testExample in DataProcessor.globalTestingSet:
                 [label, labelName] =Perceptron.predictModel(testExample[:-1])
                 if label == i and testExample[-1] == i:
@@ -285,7 +284,7 @@ class Perceptron():
             precisions.append(DataProcessor.getPrecision(tp, fp))
         precision = np.average(precisions)
         recall = np.average(recalls)
-        print("percision of class: {}; recall: {}".format(precision,recall))
+        print("\npercision of class: {}; recall: {}".format(precision,recall))
 
 
         
@@ -301,5 +300,3 @@ while True:
     imageFeature = DataProcessor.featureExtraction(image3d)
     predicition = Perceptron.predictModel(example=imageFeature)
     print(predicition)
-
-
