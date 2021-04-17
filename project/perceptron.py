@@ -1,8 +1,6 @@
-from utils import get_image_3d
 from data_processing import DataProcessor
 import numpy as np
 import matplotlib.pyplot as plt
-from tkinter.filedialog import askopenfilename
 
 '''
 perceptron class, this is the main class for creating the model
@@ -247,16 +245,14 @@ class Perceptron():
         for p in Perceptron.perceptrons:
             # use each one to predict and append the prediction
             perceptronPredictions.append(p.predict(example))
+
         perceptronPredictions = np.array(perceptronPredictions)
-        # get where prediction == 1 (indexes)
-        # sort the answer based on highest confidence
         onesIndex = np.argmax(perceptronPredictions[:,-1], axis=0)
         label = "unable to find label due to not loading classlabel.csv"
         try:
             label = Perceptron.perceptrons[onesIndex].getLabelNameFromLabelValue()
         except:
             pass
-        # then you can return both label name and index (predicition)
         return [onesIndex, label]
     
     def testModel():
@@ -303,18 +299,4 @@ class Perceptron():
         print("\npercision of class: {}; recall: {}; F1: {}; accuracy: {}".format(precision,recall, f1, accuracy))
 
 
-        
-# Perceptron.trainModel(epochs=1000,learningRate=0.01, runValidation=False)
-# Perceptron.testModel()
-status = Perceptron.initialize()
-if status != 0:
-    print("not trained before")
-    exit(0)
-else:
-    print("initialized")
-# while True:
-#     filename = askopenfilename(filetypes=[("images", "*.jpg")])
-#     image3d = get_image_3d(filename)
-#     imageFeature = DataProcessor.featureExtraction(image3d)
-#     predicition = Perceptron.predictModel(example=imageFeature)
-#     print(predicition)
+
