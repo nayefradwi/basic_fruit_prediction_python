@@ -201,7 +201,7 @@ class Perceptron():
             p = Perceptron(learningRate,classLabelValue=i)
             print("\ntraining {} perceptron".format(p.getLabelNameFromLabelValue()),)
             # train perceptron
-            p.train(epochs, addGraph=True, runValidation=runValidation)
+            p.train(epochs, addGraph=False, runValidation=runValidation)
             # append weights
             weights.append(p.w)
             # append perceptron

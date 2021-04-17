@@ -46,7 +46,7 @@ def create_dataset():
         thread = Thread(target = DataProcessor.createDataset, args=[filename])
         thread.start()
         print("creating dataset...")
-        thread1 = Thread(target=onProgressIsDone)
+        thread1 = Thread(target=onProgressIsDone, args=[thread])
         thread1.start()
      
 def updateImage():
@@ -65,11 +65,11 @@ def train_dataset():
             return
     try:
         epoch = int(epochsVar.get())
-        learningRateVar = float(learningRateVar.get())
-        thread = Thread(target =  Perceptron.trainModel, args=[epoch, learningRateVar])
+        learningrate = float(learningRateVar.get())
+        thread = Thread(target =  Perceptron.trainModel, args=[epoch, learningrate])
         thread.start()
         print("started training...")
-    except:
+    except Exception as E:
         print("please use numbers for epochs(int) and learning rate(float)")
 
 def test_dataset():
