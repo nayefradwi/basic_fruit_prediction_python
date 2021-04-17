@@ -304,15 +304,17 @@ class Perceptron():
 
 
         
-Perceptron.trainModel(epochs=1000,learningRate=0.01, runValidation=False)
-Perceptron.testModel()
+# Perceptron.trainModel(epochs=1000,learningRate=0.01, runValidation=False)
+# Perceptron.testModel()
 status = Perceptron.initialize()
 if status != 0:
     print("not trained before")
     exit(0)
-while True:
-    filename = askopenfilename(filetypes=[("images", "*.jpg")])
-    image3d = get_image_3d(filename)
-    imageFeature = DataProcessor.featureExtraction(image3d)
-    predicition = Perceptron.predictModel(example=imageFeature)
-    print(predicition)
+else:
+    print("initialized")
+# while True:
+#     filename = askopenfilename(filetypes=[("images", "*.jpg")])
+#     image3d = get_image_3d(filename)
+#     imageFeature = DataProcessor.featureExtraction(image3d)
+#     predicition = Perceptron.predictModel(example=imageFeature)
+#     print(predicition)

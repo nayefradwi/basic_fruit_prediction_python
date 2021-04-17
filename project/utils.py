@@ -62,9 +62,9 @@ def show_image(pixels):
     it will display it in a new plot
     """
     
-    plt.figure()
+    figure1 = plt.figure(1)
     plt.imshow(pixels)
-    return None
+    return figure1
 
 
 def print_files(directory):
