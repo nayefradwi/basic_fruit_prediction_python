@@ -199,6 +199,14 @@ class DataProcessor():
             return tp/(tp+fn)
         except:
             return 0
+
+    def getF1(tp, fp, fn):
+        try:
+            p = DataProcessor.getPrecision(tp, fp)
+            r = DataProcessor.getRecall(tp, fn)
+            return (2*p*r)/(p+r)
+        except:
+            return 0
     '''
     params:
     features - 1d array of features without the label

@@ -144,11 +144,15 @@ class Perceptron():
             plt.figure(1)
             plt.plot(accuracies, label=self.getLabelNameFromLabelValue())
             plt.title("accuracy vs number of epochs")
+            plt.xlabel("# of epochs")
+            plt.ylabel("accuracy")
             plt.legend()
             if runValidation:
                 plt.figure(2)
                 plt.plot(validationAccuracies, label=self.getLabelNameFromLabelValue())
                 plt.title("validation accuracy vs number of epochs")
+                plt.xlabel("# of epochs")
+                plt.ylabel("accuracy")
                 plt.legend()
         return np.array(accuracies)
 
@@ -258,6 +262,8 @@ class Perceptron():
     def testModel():
         precisions = []
         recalls = []
+        fOnes = []
+        accuracies = []
         for i in range(0, len(Perceptron.perceptrons)):
             tp = 0
             fp = 0
@@ -282,13 +288,23 @@ class Perceptron():
             recalls.append(DataProcessor.getRecall(tp, fn))
             # get percision
             precisions.append(DataProcessor.getPrecision(tp, fp))
+            # get F1
+            fOnes.append(DataProcessor.getF1(tp, fp, fn))
+            accuracy = (tp+tn)/(tp+tn+fn+fp)
+            accuracies.append(accuracy)
+        np.savetxt("accuracy.csv", accuracies, delimiter=",")
+        np.savetxt("fOnes.csv", fOnes, delimiter=",")
+        np.savetxt("recalls.csv", recalls, delimiter=",")
+        np.savetxt("precisions.csv", precisions, delimiter=",")
         precision = np.average(precisions)
         recall = np.average(recalls)
-        print("\npercision of class: {}; recall: {}".format(precision,recall))
+        accuracy = np.average(accuracies)
+        f1 = np.average(fOnes)
+        print("\npercision of class: {}; recall: {}; F1: {}; accuracy: {}".format(precision,recall, f1, accuracy))
 
 
         
-Perceptron.trainModel(epochs=100,learningRate=0.01, runValidation=False)
+Perceptron.trainModel(epochs=10,learningRate=0.01, runValidation=False)
 Perceptron.testModel()
 status = Perceptron.initialize()
 if status != 0:

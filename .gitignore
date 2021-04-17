@@ -2,6 +2,8 @@
 project.zip
 /dataset/
 /foo.csv
-training.csv
-testing.csv
+accuracy.csv
+fOnes.csv
+precisions.csv
+recalls.csv
 /Training/
