@@ -304,7 +304,7 @@ class Perceptron():
 
 
         
-Perceptron.trainModel(epochs=10,learningRate=0.01, runValidation=False)
+Perceptron.trainModel(epochs=1000,learningRate=0.01, runValidation=False)
 Perceptron.testModel()
 status = Perceptron.initialize()
 if status != 0:
