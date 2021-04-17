@@ -29,6 +29,7 @@ class Perceptron():
     def initialize():
         DataProcessor.initializeDataProcessorClass()
         try:
+            Perceptron.perceptrons = []
             classesWeights = np.genfromtxt("weights.csv",  delimiter=',')
             for i in range(0, len(classesWeights)):
                 Perceptron.perceptrons.append(Perceptron(None, classLabelValue=i, weights=classesWeights[i]))
@@ -191,6 +192,7 @@ class Perceptron():
     this makes the model deployable 
     '''
     def trainModel(epochs, learningRate,runValidation = False):
+        Perceptron.perceptrons = []
         if not Perceptron.isDpInitialized:
             DataProcessor.initializeDataProcessorClass()
         # define a 2d np array of weights that will then be stored in a csv file
